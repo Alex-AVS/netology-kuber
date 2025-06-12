@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storage-dep
+  labels:
+    app: storage-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: storage-app
+  template:
+    metadata:
+      labels:
+        app: storage-app
+    spec:
+      containers:
+        - name: bbox
+          image: busybox:latest
+          command: ['sh', '-c', 'n=1; while true; do echo "Sample data item $n" >> /share/data.txt; sleep 5; n=$(( n+1 )); done']
+          volumeMounts:
+            - name: vol
+              mountPath: /share
+        - name: mtool
+          image: wbitt/network-multitool
+          volumeMounts:
+            - name: vol
+              mountPath: /share
+      volumes:
+        - name: vol
+          emptyDir: { }

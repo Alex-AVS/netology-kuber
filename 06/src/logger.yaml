@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: logger-dep
+  labels:
+    app: logger-app
+spec:
+  selector:
+    matchLabels:
+      app: logger-app
+  template:
+    metadata:
+      labels:
+        app: logger-app
+    spec:
+      containers:
+        - name: mtool
+          image: wbitt/network-multitool
+          volumeMounts:
+            - name: syslog
+              mountPath: /var/syslog
+              readOnly: true
+      volumes:
+        - name: syslog
+          hostPath:
+            path: /var/log/syslog
+            type: File

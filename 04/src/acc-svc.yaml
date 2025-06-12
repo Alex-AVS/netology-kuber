@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: access-svc
+spec:
+  selector:
+    app: netology-app
+  ports:
+  - protocol: TCP
+    port: 80
+    nodePort: 30080
+    name: web-port
+  type: NodePort

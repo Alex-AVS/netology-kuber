@@ -1,0 +1,43 @@
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-vol
+  namespace: default
+spec:
+  storageClassName: "microk8s-hostpath"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sc-dep
+  labels:
+    app: sc-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sc-app
+  template:
+    metadata:
+      labels:
+        app: sc-app
+    spec:
+      containers:
+        - name: mtool
+          image: wbitt/network-multitool
+          volumeMounts:
+            - name: vol
+              mountPath: /share
+      volumes:
+        - name: vol
+          persistentVolumeClaim:
+            claimName: data-vol
+

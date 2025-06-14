@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ssl-svc
+spec:
+  selector:
+    app: ssl-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: nginx-port
+    name: nginx-port

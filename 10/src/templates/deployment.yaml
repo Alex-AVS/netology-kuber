@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-dep
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-app
+spec:
+  replicas: {{ .Values.app.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-app
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-app
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-app
+          image: {{ .Values.app.image.name }}:{{.Values.app.image.tag}}
+          ports:
+            - containerPort: 80
+              name: nginx-port
+          volumeMounts:
+            - name: hello
+              mountPath: "/usr/share/nginx/html"
+      volumes:
+      - name: hello
+        configMap:
+          name: {{ .Release.Name }}-config
+          items:
+          - key: "hello.html"
+            path: "hello.html"

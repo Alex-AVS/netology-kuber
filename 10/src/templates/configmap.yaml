@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-config
+  namespace: {{ .Release.Namespace }}
+data:
+   hello.html: |
+    <html>
+    <body>
+      <h1>Hello world from k8s!</h1>
+      <p>Some greetings here...</p>
+      <p>This {{ .Release.Name }} app v.{{.Chart.Version}} is powered by {{.Values.app.image.name}}-{{.Values.app.image.tag}}</p>
+    </body>
+    </html>
